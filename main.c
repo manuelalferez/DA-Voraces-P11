@@ -34,21 +34,21 @@
  * debe ser la más corta, b la siguiente y así sucesivamente.
  */
 
-int seleccion(int reparaciones[], int tama) {
+int seleccion(int reparaciones[], int n) {
     int mejorOpcion = 0;
-    for (int i = 1; i < tama; i++) {
+    for (int i = 1; i < n; i++) {
         if (reparaciones[i] < reparaciones[mejorOpcion])
             mejorOpcion = i;
     }
     return mejorOpcion;
 }
 
-void eliminar(int v[], int pos, int tama) {
-    v[pos] = v[tama - 1];
+void eliminar(int v[], int pos, int n) {
+    v[pos] = v[n - 1];
 }
 
-int factible(int v[], int tama) {
-    if (v[tama - 1] != 0) return 0;
+int factible(int v[], int n) {
+    if (v[n - 1] != 0) return 0;
     else return 1;
 }
 
@@ -63,7 +63,7 @@ int* algoritmoVoraz(int reparaciones[], int n) {
         ele = reparaciones[pos];
         eliminar(reparaciones, pos, n_restantes);
         n_restantes--;
-        if (factible(S, tam_S)) {
+        if (factible(S, n)) {
             S[tam_S] = ele;
             tam_S++;
         }
@@ -83,9 +83,17 @@ int main(int argc, char** argv) {
     int num_trabajos = 18;
 
     int* solucion = algoritmoVoraz(trabajos, num_trabajos);
+    int media = 0;
+    printf("Ordenación de tareas: ");
 
-    for (int i = 0; i < num_trabajos; i++)
-        printf("Tarea %d:    %d\n", i+1, solucion[i]);
+    for (int i = 0; i < num_trabajos; i++) {
+        printf(" | %d", solucion[i]);
+        media += solucion[i]*(i + 1);
+    }
+
+     printf("\n");
+    
+    printf("Espera media (en minutos): %d", media/18);
 
     return (EXIT_SUCCESS);
 }
