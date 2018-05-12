@@ -34,24 +34,53 @@
  * debe ser la más corta, b la siguiente y así sucesivamente.
  */
 
+/**
+ * @brief Función de selección: Selecciona la reparación que lleva menos tiempo
+ * entre las disponibles 
+ * 
+ * @param reparaciones Vector de reparaciones
+ * @param n Número de reparaciones
+ * @return Devuelve la posición con la reparación más óptima
+ */
 int seleccion(int reparaciones[], int n) {
-    int mejorOpcion = 0;
+    int mejorOpcion = 0; //Mejor repación que realizar
     for (int i = 1; i < n; i++) {
-        if (reparaciones[i] < reparaciones[mejorOpcion])
-            mejorOpcion = i;
+        if (reparaciones[i] < reparaciones[mejorOpcion]) mejorOpcion = i;
     }
     return mejorOpcion;
-}
+} //seleccion
 
+/**
+ * @brief Elimina una posición de un vector
+ * 
+ * @param v Vector
+ * @param pos Posición a eliminar
+ * @param n Tamaño del Vector
+ */
 void eliminar(int v[], int pos, int n) {
     v[pos] = v[n - 1];
-}
+} //eliminar
 
+/**
+ * @brief Nos informa si es factible añadir un elemento a la solución
+ * 
+ * @param vector Vector 
+ * @param n El tamaño del vector
+ * @return Devuelve 1 si es factible añadir otro elemento o 0 en caso contrario
+ */
 int factible(int v[], int n) {
     if (v[n - 1] != 0) return 0;
     else return 1;
-}
+} //factible
 
+/**
+ * @brief Función voraz
+ * 
+ * @param reparaciones Reparaciones urgentes
+ * @param n Número de reparaciones
+ * @return Devuelve un vector solución con la planificación que hay que realizar
+ * en cada aviso
+ */
 int* algoritmoVoraz(int reparaciones[], int n) {
     int* S = malloc(n * sizeof (int)); //S es el conjunto de la solución
     //Inicializamos
@@ -63,38 +92,35 @@ int* algoritmoVoraz(int reparaciones[], int n) {
         ele = reparaciones[pos];
         eliminar(reparaciones, pos, n_restantes);
         n_restantes--;
-        if (factible(S, n)) {
-            S[tam_S] = ele;
-            tam_S++;
-        }
+        if (factible(S, n)) S[tam_S++] = ele;
     }
     return S;
-}
+} //algoritmoVoraz
 
 /*
- * @brief Función principal: 
+ * @brief Función principal: Ejemplo del problema. Muestra la planificación
+ * de una serie de reparaciones por pantalla y la media en minutos de la espera 
+ * media de los clientes
  * 
  * @param argc Número de parámetros por línea de ordenes
  * @param argv Parámetros por líneas de órdenes
  */
 int main(int argc, char** argv) {
 
+    //Vector de reparaciones urgentes
     int trabajos[] = {52, 1, 2, 6, 9, 8, 5, 45, 1, 4, 5, 33, 1, 25, 26, 78, 4, 12};
     int num_trabajos = 18;
 
     int* solucion = algoritmoVoraz(trabajos, num_trabajos);
     int media = 0;
-    printf("Ordenación de tareas: ");
-
+    
+    printf("Ordenación de reparaciones: ");
     for (int i = 0; i < num_trabajos; i++) {
         printf(" | %d", solucion[i]);
-        media += solucion[i]*(i + 1);
+        media += solucion[i]*(i + 1); //Sumamos el tiempo de espera
     }
 
-     printf("\n");
-    
-    printf("Espera media (en minutos): %d", media/18);
+    printf("\nEspera media (en minutos): %d", media / 18);
 
     return (EXIT_SUCCESS);
-}
-
+} //main
